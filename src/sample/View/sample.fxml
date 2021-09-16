@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.Controller">
+   <children>
+      <BorderPane layoutX="123.0" layoutY="110.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <right>
+            <VBox prefHeight="400.0" prefWidth="168.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ListView fx:id="listView" prefHeight="307.0" prefWidth="168.0" />
+                  <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="168.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#listViewUp" text="↑" />
+                        <Button mnemonicParsing="false" onAction="#listViewDown" text="↓" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="168.0">
+                     <children>
+                        <ComboBox fx:id="comboBox" prefHeight="27.0" prefWidth="122.0" />
+                        <Button mnemonicParsing="false" onAction="#newStroke" text="New" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" disable="true" prefHeight="18.0" prefWidth="149.0">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="27.0" text="⏮️" />
+                        <Button mnemonicParsing="false" text="⏹️" />
+                        <Button mnemonicParsing="false" text="▶️" />
+                        <Button mnemonicParsing="false" text="⏸️" />
+                        <Button mnemonicParsing="false" text="⏭️" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="61.0" prefWidth="168.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#exportCSV" text="Export CSV" />
+                        <Button mnemonicParsing="false" onAction="#importCSV" text="Import CSV" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </right>
+         <center>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
