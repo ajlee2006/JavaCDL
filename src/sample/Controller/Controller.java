@@ -2,16 +2,20 @@ package sample.Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import sample.Model.Stroke;
+import sample.Model.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.util.*;
 
@@ -20,19 +24,144 @@ public class Controller {
     private ListView<Stroke> listView;
     @FXML
     private ComboBox<String> comboBox;
+    @FXML
+    private CheckBox gridlines, simple, hook, visible;
+    @FXML
+    private Canvas canvas;
+    @FXML
+    private Label mousePos;
+    private GraphicsContext gc;
     private ObservableList<Stroke> strokes;
-    private final ObservableList<String> typeNames = FXCollections.observableArrayList("Héng (横)","Shù (竖)","Piě (撇)","Nà (捺)");
-    private final String[] types = {"H","S","P","N"};
-    private final double[][] typeDefaultCoords = {{10.0,10.0,20.0,10.0},{10.0,10.0,10.0,20.0},{20.0,10.0,10.0,20.0},{10.0,10.0,20.0,20.0}};
+    private Point selectedPoint;
+    private double oldMouseX, oldMouseY;
+    private final ObservableList<String> typeNames = FXCollections.observableArrayList("Héng (横)","Shù (竖)","Piě (撇)","Nà (捺)","Diǎn (点)","Gōu (钩)","Stroke");
+    private final String[] types = {"H","S","P","N","D","G","X"};
+    private final double[][] typeDefaultCoords = {{10.0,10.0,100.0,10.0},{10.0,10.0,10.0,100.0},{100.0,10.0,10.0,100.0},{10.0,10.0,100.0,100.0},{50.0,50.0,100.0,100.0},{100.0,100.0,50.0,50.0},{10.0,10.0,100.0,10.0}};
 
     public void initialise() {
         strokes = FXCollections.observableArrayList();
         listView.setItems(strokes);
         comboBox.setItems(typeNames);
+        canvas.setWidth((int) canvas.getWidth());
+        canvas.setHeight((int) canvas.getHeight());
+        gc = canvas.getGraphicsContext2D();
+        gridlines.setSelected(true);
+        drawBackground();
     }
 
+    public void drawBackground() {
+        gc.setStroke(Color.LIGHTGREEN);
+        gc.setLineWidth(10);
+        gc.strokeLine(0,0,0,canvas.getHeight());
+        gc.strokeLine(canvas.getWidth(),0,canvas.getWidth(),canvas.getHeight());
+        gc.strokeLine(0,0,canvas.getWidth(),0);
+        gc.strokeLine(0,canvas.getHeight(),canvas.getWidth(),canvas.getHeight());
+        gc.setLineDashes(7);
+        gc.setLineWidth(2);
+        gc.strokeLine(0,0,canvas.getWidth(),canvas.getHeight());
+        gc.strokeLine(0,canvas.getHeight(),canvas.getWidth(),0);
+        gc.strokeLine(canvas.getWidth()/2,0,canvas.getWidth()/2,canvas.getHeight());
+        gc.strokeLine(0,canvas.getHeight()/2,canvas.getWidth(),canvas.getHeight()/2);
+        gc.setLineDashes();
+    }
+
+    public void draw(boolean background) {
+        gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
+        if (background) drawBackground();
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
+        if (simple.isSelected()) {
+            gc.setLineWidth(5);
+            for (Stroke i: strokes) if (i.isVisible()) i.drawSimple(gc);
+        } else {
+            for (Stroke i: strokes) if (i.isVisible()) i.draw(gc);
+        }
+
+    }
+
+    public void draw() {
+        draw(gridlines.isSelected());
+    }
+
+    @FXML
+    public void play(ActionEvent e) {
+        // todo play
+    }
+
+    @FXML
+    public void pause(ActionEvent e) {
+        // todo pause
+    }
+
+    @FXML
+    public void stop(ActionEvent e) {
+        // todo stop
+    }
+
+    @FXML
+    public void checkBoxOnAction(ActionEvent e) {
+        try {
+            Stroke selected = listView.getSelectionModel().getSelectedItem();
+            if (selected instanceof Heng) ((Heng) selected).setHook(hook.isSelected());
+            selected.setVisible(visible.isSelected());
+        } catch (Exception actionEvent) {
+            hook.setSelected(false);
+            visible.setSelected(true);
+        }
+        draw();
+    }
+
+    @FXML
+    public void canvasOnClick(MouseEvent e) {
+        for (Stroke i: strokes) {
+            for (Point j: i.getPoints()) {
+                if ((j.getX()-e.getX())*(j.getX()-e.getX())+(j.getY()-e.getY())*(j.getY()-e.getY()) <= 30) {
+                    selectedPoint = j;
+                    listView.getSelectionModel().select(i);
+                    oldMouseX = e.getX();
+                    oldMouseY = e.getY();
+                    return;
+                }
+            }
+        }
+        selectedPoint = null;
+    }
+
+    @FXML
+    public void canvasOnDrag(MouseEvent e) {
+        if (selectedPoint != null) {
+            selectedPoint.setX(selectedPoint.getX() - oldMouseX + e.getX());
+            selectedPoint.setY(selectedPoint.getY() - oldMouseY + e.getY());
+            oldMouseX = e.getX();
+            oldMouseY = e.getY();
+            draw();
+            listView.refresh();
+        }
+    }
+
+    @FXML
+    public void canvasOnMove(MouseEvent e) {
+        mousePos.setText("" + canvas.getWidth() + ", " + canvas.getHeight() + "; " + e.getX() + ", " + e.getY());
+    }
+
+    @FXML
+    public void listViewOnClick(MouseEvent e) {
+        Stroke selected = listView.getSelectionModel().getSelectedItem();
+        if (selected instanceof Heng) {
+            hook.setDisable(false);
+            hook.setSelected(((Heng) selected).getHook());
+        }
+        else {
+            hook.setDisable(true);
+            hook.setSelected(false);
+        }
+        visible.setSelected(selected.isVisible());
+    }
+
+    @FXML
     public void importCSV(ActionEvent exception) {
         try {
+            if (strokes.size() > 0) alertMessage("Your current work will be lost.");
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open file");
             chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV files", "*.csv"), new FileChooser.ExtensionFilter("All files", "*"));
@@ -41,21 +170,31 @@ public class Controller {
             if (selectedFile != null) {
                 BufferedReader br = new BufferedReader(new FileReader(selectedFile));
                 String s;
+                if (strokes.size() > 0) strokes.subList(0, strokes.size()).clear();
                 do {
                     s = br.readLine();
                     if (s != null) {
                         String[] tokens = s.split(",");
-                        ArrayList<Double> coords = new ArrayList<>();
-                        for (int i=1;i<tokens.length;i++) coords.add(Double.parseDouble(tokens[i]));
-                        strokes.add(new Stroke(tokens[0],coords));
+                        ArrayList<Point> points = new ArrayList<>();
+                        for (int i=1;i<tokens.length;i+=2) points.add(new Point(Double.parseDouble(tokens[i]),Double.parseDouble(tokens[i+1])));
+                        if (tokens[0].equals("H")) strokes.add(new Heng(points));
+                        else if (tokens[0].equals("Hn")) strokes.add(new Heng(points,false));
+                        else if (tokens[0].equals("S")) strokes.add(new Shu(points));
+                        else if (tokens[0].equals("P")) strokes.add(new Pie(points));
+                        else if (tokens[0].equals("N")) strokes.add(new Na(points));
+                        else if (tokens[0].equals("D")) strokes.add(new Dian(points));
+                        else if (tokens[0].equals("G")) strokes.add(new Gou(points));
+                        else strokes.add(new Stroke(points));
                     }
                 } while (s != null);
             }
+            draw();
         } catch (Exception actionEvent) {
             alertError(actionEvent, "Invalid file!");
         }
     }
 
+    @FXML
     public void exportCSV(ActionEvent e) {
         try {
             FileChooser chooser = new FileChooser();
@@ -65,9 +204,18 @@ public class Controller {
             if (selectedFile != null) {
                 PrintWriter pw = new PrintWriter(new FileWriter(selectedFile, false));
                 for (Stroke i: strokes) {
-                    pw.print(i.getType());
-                    for (double j: i.getCoords()) {
-                        pw.print(","+j);
+                    if (i instanceof Heng) {
+                        pw.print("H");
+                        if (!((Heng) i).getHook()) pw.print("n");
+                    }
+                    else if (i instanceof Shu) pw.print("S");
+                    else if (i instanceof Pie) pw.print("P");
+                    else if (i instanceof Na) pw.print("N");
+                    else if (i instanceof Dian) pw.print("D");
+                    else if (i instanceof Gou) pw.print("G");
+                    else pw.print("X");
+                    for (Point j: i.getPoints()) {
+                        pw.print(","+j.getX()+","+j.getY());
                     } pw.println();
                 }
                 pw.close();
@@ -77,6 +225,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void listViewUp(ActionEvent e) {
         int index = listView.getSelectionModel().getSelectedIndex();
         if (index > 0) {
@@ -85,8 +234,10 @@ public class Controller {
             strokes.add(index - 1, selected);
             listView.getSelectionModel().select(index-1);
         }
+        draw();
     }
 
+    @FXML
     public void listViewDown(ActionEvent e) {
         Stroke selected = listView.getSelectionModel().getSelectedItem();
         int index = listView.getSelectionModel().getSelectedIndex();
@@ -95,11 +246,47 @@ public class Controller {
             strokes.add(index + 1, selected);
             listView.getSelectionModel().select(index+1);
         }
+        draw();
     }
 
+    @FXML
     public void newStroke(ActionEvent e) {
         int index = comboBox.getSelectionModel().getSelectedIndex();
-        strokes.add(new Stroke(types[index],typeDefaultCoords[index]));
+        Point[] points = new Point[]{new Point(typeDefaultCoords[index][0], typeDefaultCoords[index][1]), new Point(typeDefaultCoords[index][2], typeDefaultCoords[index][3])};
+        if (types[index].equals("H")) strokes.add(new Heng(points));
+        else if (types[index].equals("S")) strokes.add(new Shu(points));
+        else if (types[index].equals("P")) strokes.add(new Pie(points));
+        else if (types[index].equals("N")) strokes.add(new Na(points));
+        else if (types[index].equals("D")) strokes.add(new Dian(points));
+        else if (types[index].equals("G")) strokes.add(new Gou(points));
+        else strokes.add(new Stroke(points));
+        listView.getSelectionModel().select(strokes.size()-1);
+        draw();
+    }
+
+    @FXML
+    public void delete(ActionEvent e) {
+        strokes.remove(listView.getSelectionModel().getSelectedIndex());
+        draw();
+    }
+
+    @FXML
+    public void saveImage(ActionEvent e) {
+        try {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Save file");
+            chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG files", "*.png"), new FileChooser.ExtensionFilter("All files", "*"));
+            File selectedFile = chooser.showSaveDialog(((Button) e.getSource()).getScene().getWindow());
+            if (selectedFile != null) {
+                WritableImage wi = new WritableImage((int) canvas.getWidth(),(int) canvas.getHeight());
+                draw();
+                canvas.snapshot(null,wi);
+                RenderedImage ri = SwingFXUtils.fromFXImage(wi,null);
+                ImageIO.write(ri,"png",selectedFile);
+            }
+        } catch (Exception actionEvent) {
+            alertError(actionEvent);
+        }
     }
 
     public void alertError(Exception e) {
