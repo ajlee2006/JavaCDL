@@ -51,7 +51,7 @@ public class Heng extends Stroke {
         if (hook && extent == 1.0)
             gc.fillPolygon(new double[]{x1-1.5, x1+1.5, x2-1.5, x2+1.5, (x1+7*x2)/8+1.2, (x1+7*x2)/8-5},
                 new double[]{y1-2, y1+2, y2+2, y2-2, (y1+7*y2)/8-Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))/25-4, (y1+5*y2)/6-2}, 6);
-        else
+        else if (extent != 0.0)
             gc.fillPolygon(new double[]{x1-1.5, x1+1.5, x2-1.5, x2+1.5},
                     new double[]{y1-2, y1+2, y2+2, y2-2}, 4);
     }

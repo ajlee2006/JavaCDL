@@ -48,11 +48,10 @@
                         <Button mnemonicParsing="false" onAction="#newStroke" text="New" />
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_CENTER" disable="true" prefHeight="18.0" prefWidth="149.0">
+                  <HBox alignment="TOP_CENTER" prefHeight="18.0" prefWidth="149.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#play" text="▶️" />
-                        <Button mnemonicParsing="false" onAction="#pause" text="⏸️" />
-                        <Button mnemonicParsing="false" onAction="#stop" text="⏹️" />
+                        <Button mnemonicParsing="false" onAction="#play" text="Start animation" />
+                        <Button mnemonicParsing="false" onAction="#stop" text="Stop" />
                      </children>
                   </HBox>
                   <HBox alignment="TOP_CENTER" prefHeight="10.0" prefWidth="183.0">

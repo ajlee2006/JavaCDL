@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/ajlee2006/IdeaProjects/Project</OriginalElement>
+  <nodes>
+    <node x="705.0" y="1004.0">sample.Model.Stroke</node>
+    <node x="1410.0" y="1331.5">sample.Model.Pie</node>
+    <node x="0.0" y="1587.0">sample.Main</node>
+    <node x="0.0" y="0.0">sample.Controller.Controller</node>
+    <node x="564.0" y="1331.5">sample.Model.Dian</node>
+    <node x="89.5" y="1848.0">sample.Main.InitCompletionHandler</node>
+    <node x="1128.0" y="1331.5">sample.Model.Shu</node>
+    <node x="846.0" y="1331.5">sample.Model.Gou</node>
+    <node x="443.0" y="1587.0">sample.Model.Point</node>
+    <node x="282.0" y="1331.5">sample.Model.Na</node>
+    <node x="0.0" y="1287.0">sample.Model.Heng</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="sample.Main.InitCompletionHandler" target="sample.Main" relationship="INNER_CLASS">
+      <point x="0.0" y="-27.5" />
+      <point x="0.0" y="105.5" />
+    </edge>
+    <edge source="sample.Model.Pie" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="1541.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+    <edge source="sample.Model.Gou" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="977.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+    <edge source="sample.Model.Shu" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="1259.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+    <edge source="sample.Model.Dian" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="695.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+    <edge source="sample.Model.Na" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="413.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+    <edge source="sample.Model.Heng" target="sample.Model.Stroke" relationship="GENERALIZATION">
+      <point x="0.0" y="-127.5" />
+      <point x="131.0" y="1262.0" />
+      <point x="836.0" y="1262.0" />
+      <point x="0.0" y="116.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.5255099304730128" showDependencies="false" x="697.3306345737262" y="797.6506726902014" />
+  <SelectedNodes>
+    <node>sample.Controller.Controller</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

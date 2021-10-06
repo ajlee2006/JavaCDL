@@ -22,7 +22,8 @@ public class Shu extends Stroke {
         gc.setLineWidth(0);
         double x1 = points.get(0).getX(), x2 = (1-extent)*points.get(0).getX() + extent*points.get(1).getX(),
                 y1 = points.get(0).getY(), y2 = (1-extent)*points.get(0).getY() + extent*points.get(1).getY();
-        gc.fillPolygon(new double[]{x1 - 6, x2 - 6, x2 + 6, x1 + 6, x1+10+0.01*(y2-y1)},
+        if (extent != 0.0)
+            gc.fillPolygon(new double[]{x1 - 6, x2 - 6, x2 + 6, x1 + 6, x1+10+0.01*(y2-y1)},
                 new double[]{y1, y2+1, y2-1, y1+10,y1+3}, 5);
     }
 

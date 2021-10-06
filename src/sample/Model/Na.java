@@ -33,7 +33,8 @@ public class Na extends Stroke {
         gc.setLineWidth(5);
         double x1 = points.get(0).getX(), x2 = (1-extent)*points.get(0).getX() + extent*points.get(1).getX(),
                 y1 = points.get(0).getY(), y2 = (1-extent)*points.get(0).getY() + extent*points.get(1).getY();
-        gc.strokeArc(x1,y1-(y2-y1)*2,(x2-x1)*3,(y2-y1)*3,-110,-50, ArcType.OPEN);
+        if (extent != 0.0)
+            gc.strokeArc(x1,y1-(y2-y1)*2,(x2-x1)*3,(y2-y1)*3,-110,-50, ArcType.OPEN);
         //gc.strokeLine(x1,y1,x2,y2);
     }
 }

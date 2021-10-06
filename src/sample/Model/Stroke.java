@@ -45,10 +45,19 @@ public class Stroke {
         gc.setLineWidth(5);
         double x1 = points.get(0).getX(), x2 = (1-extent)*points.get(0).getX() + extent*points.get(1).getX(),
                 y1 = points.get(0).getY(), y2 = (1-extent)*points.get(0).getY() + extent*points.get(1).getY();
-        gc.strokeLine(x1,y1,x2,y2);
+        if (extent != 0.0)
+            gc.strokeLine(x1,y1,x2,y2);
     }
 
     public void drawSimple(GraphicsContext gc) {
         draw(gc);
+    }
+
+    public double getExtent() {
+        return extent;
+    }
+
+    public void setExtent(double extent) {
+        this.extent = extent;
     }
 }

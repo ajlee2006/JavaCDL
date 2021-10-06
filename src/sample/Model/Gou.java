@@ -33,6 +33,7 @@ public class Gou extends Stroke {
         gc.setLineWidth(0);
         double x1 = points.get(0).getX(), x2 = (1-extent)*points.get(0).getX() + extent*points.get(1).getX(),
                 y1 = points.get(0).getY(), y2 = (1-extent)*points.get(0).getY() + extent*points.get(1).getY();
-        gc.fillPolygon(new double[]{x1, x2, x1}, new double[]{y1, y2, y2-0.1*(y2-y1)}, 3);
+        if (extent != 0.0)
+            gc.fillPolygon(new double[]{x1, x2, x1}, new double[]{y1, y2, y2-0.1*(y2-y1)}, 3);
     }
 }

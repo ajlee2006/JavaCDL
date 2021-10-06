@@ -33,6 +33,7 @@ public class Controller {
     private GraphicsContext gc;
     private ObservableList<Stroke> strokes;
     private Point selectedPoint;
+    private int playSelectedStrokeIndex;
     private double oldMouseX, oldMouseY;
     private final ObservableList<String> typeNames = FXCollections.observableArrayList("Héng (横)","Shù (竖)","Piě (撇)","Nà (捺)","Diǎn (点)","Gōu (钩)","Stroke");
     private final String[] types = {"H","S","P","N","D","G","X"};
@@ -85,17 +86,43 @@ public class Controller {
 
     @FXML
     public void play(ActionEvent e) {
-        // todo play
+        for (int i=playSelectedStrokeIndex = 0;i<strokes.size();i++) {
+            strokes.get(i).setExtent(0);
+        }
+        startTask();
     }
 
-    @FXML
-    public void pause(ActionEvent e) {
-        // todo pause
+    public void startTask() {
+        Runnable task = this::runTask;
+        Thread backgroundThread = new Thread(task);
+        backgroundThread.setDaemon(true);
+        backgroundThread.start();
+    }
+
+    public void runTask() {
+        for (int i=playSelectedStrokeIndex; i<strokes.size(); i++) {
+            playSelectedStrokeIndex = i;
+            double r = Math.round(strokes.get(i).getExtent()*50)/50.0;
+            while (r < 1) {
+                strokes.get(i).setExtent(r+0.02);
+                r = Math.round(strokes.get(i).getExtent()*50)/50.0;
+                draw();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        playSelectedStrokeIndex = 0;
     }
 
     @FXML
     public void stop(ActionEvent e) {
-        // todo stop
+        for (Stroke i: strokes) {
+            i.setExtent(1);
+        }
+        playSelectedStrokeIndex = 0;
     }
 
     @FXML
